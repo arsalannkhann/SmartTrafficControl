@@ -1,0 +1,75 @@
+
+{
+  "annotations": {"list": []},
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {"defaults": {}, "overrides": []},
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 0},
+      "id": 1,
+      "options": {},
+      "targets": [
+        {"expr": "avg by (intersection_id) (traffic_congestion_index{intersection_id=~\"$intersection_id\"})", "legendFormat": "{{intersection_id}}", "refId": "A"}
+      ],
+      "title": "Average Traffic Congestion Index",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {"defaults": {}, "overrides": []},
+      "gridPos": {"h": 6, "w": 12, "x": 0, "y": 8},
+      "id": 2,
+      "options": {},
+      "targets": [
+        {"expr": "traffic_vehicle_count{intersection_id=~\"$intersection_id\"}", "legendFormat": "{{intersection_id}}", "refId": "A"}
+      ],
+      "title": "Vehicle Count (latest)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {"defaults": {}, "overrides": []},
+      "gridPos": {"h": 6, "w": 12, "x": 12, "y": 8},
+      "id": 3,
+      "options": {},
+      "targets": [
+        {"expr": "traffic_average_speed{intersection_id=~\"$intersection_id\"}", "legendFormat": "{{intersection_id}}", "refId": "A"}
+      ],
+      "title": "Average Speed (mph)",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": ["traffic", "tci"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": "Prometheus",
+        "definition": "label_values(traffic_vehicle_count, intersection_id)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Intersection",
+        "multi": false,
+        "name": "intersection_id",
+        "options": [],
+        "query": "label_values(traffic_vehicle_count, intersection_id)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {"from": "now-24h", "to": "now"},
+  "timezone": "browser",
+  "title": "Traffic Dashboard",
+  "uid": "traffic-dashboard",
+  "version": 1
+}

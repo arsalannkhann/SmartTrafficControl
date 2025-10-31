@@ -1,0 +1,25 @@
+[Unit]
+Description=Traffic Control All-in-One Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# This unit starts/stops the containerized stack using docker compose from the repo path.
+# It uses the system Docker binary. If your docker binary is elsewhere, update ExecStart/ExecStop.
+WorkingDirectory=/Users/arsalankhan/Downloads/TrafficSignal
+ExecStart=/usr/bin/docker compose -f /Users/arsalankhan/Downloads/TrafficSignal/docker-compose.yml up --build -d
+ExecStop=/usr/bin/docker compose -f /Users/arsalankhan/Downloads/TrafficSignal/docker-compose.yml down
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
+
+# Notes:
+# 1. Copy this file to /etc/systemd/system/traffic-control.service
+# 2. Update ExecStart/ExecStop paths to the absolute path where the repo is checked out
+# 3. Enable and start with:
+#    sudo systemctl daemon-reload
+#    sudo systemctl enable traffic-control.service
+#    sudo systemctl start traffic-control.service

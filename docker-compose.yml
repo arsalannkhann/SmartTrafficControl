@@ -1,0 +1,69 @@
+version: '3.8'
+services:
+  etl:
+    build:
+      context: .
+      dockerfile: docker/etl/Dockerfile
+    container_name: traffic_etl
+    volumes:
+      - ./data:/app/data
+      - ./src:/app/src:ro
+    restart: "no"
+    depends_on:
+      - exporter
+
+  exporter:
+    build:
+      context: .
+      dockerfile: docker/exporter/Dockerfile
+    container_name: traffic_exporter
+    volumes:
+      - ./data:/app/data
+      - ./src:/app/src:ro
+    ports:
+      - "8000:8000"
+    restart: always
+
+  gradio:
+    build:
+      context: .
+      dockerfile: docker/gradio/Dockerfile
+    container_name: traffic_gradio
+    volumes:
+      - ./data:/app/data
+      - ./src:/app/src:ro
+    ports:
+      - "7860:7860"
+    environment:
+      - GRADIO_SERVER_NAME=0.0.0.0
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: traffic_prometheus
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - exporter
+    # on Linux, resolves host.docker.internal to host-gateway when docker engine supports it
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: traffic_grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./config/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./config/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+
+networks:
+  default:
+    name: traffic_network

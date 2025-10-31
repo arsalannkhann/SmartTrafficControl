@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.trafficcontrol.stack</string>
+
+  <!-- Run the orchestrator script with `start` on load. Adjust the path if you move the repo. -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/arsalankhan/Downloads/TrafficSignal/scripts/traffic_control.sh</string>
+    <string>start</string>
+    <string>--no-docker</string>
+  </array>
+
+  <!-- KeepAlive true will restart the job if it exits. Set to true for resilience. -->
+  <key>KeepAlive</key>
+  <false/>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <!-- Ensure stdout/stderr go to repo logs for easy debugging -->
+  <key>StandardOutPath</key>
+  <string>/Users/arsalankhan/Downloads/TrafficSignal/logs/launchd.out</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/arsalankhan/Downloads/TrafficSignal/logs/launchd.err</string>
+
+  <!-- Recommended environment variables; PATH may be required for docker/docker-compose binaries -->
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/arsalankhan/Downloads/TrafficSignal</string>
+
+</dict>
+</plist>

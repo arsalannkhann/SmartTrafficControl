@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'traffic_metrics_exporter'
+    static_configs:
+      # When the exporter runs as a container (recommended), Prometheus scrapes the exporter by service name.
+      # Also include host.docker.internal so Prometheus can scrape a host-local exporter when you run it
+      # on the host (useful for macOS where the exporter runs in your venv).
+      - targets: ['exporter:8000', 'host.docker.internal:8000']
+
+      # If you run the exporter on the host and are using Docker Desktop on macOS/Windows,
+      # keep the following target (host.docker.internal) by uncommenting it. On Linux,
+      # Docker doesn't always expose host.docker.internal by default; use the docker-compose
+      # `extra_hosts: ["host.docker.internal:host-gateway"]` mapping or run Prometheus with
+      # host networking. The compose file added to this repo includes an `extra_hosts`
+      # mapping that resolves `host.docker.internal` to the host gateway on newer Docker engines.

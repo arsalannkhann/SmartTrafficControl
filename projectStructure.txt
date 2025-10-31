@@ -1,0 +1,32 @@
+
+
+Smart Traffic Control System - Project Structure
+================================================
+
+traffic_control_system/
+│
+├── data/
+│   ├── raw/                          # Raw traffic sensor data
+│   └── processed/                     # Processed parquet files
+│
+├── notebooks/
+│   └── data_exploration.ipynb         # For data exploration
+│
+├── src/
+│   ├── __init__.py
+│   ├── data_generator.py              # Generate synthetic traffic data
+│   ├── etl_pipeline.py                # PySpark ETL pipeline
+│   ├── metrics_exporter.py            # Export metrics for Grafana
+│   └── gradio_ui.py                   # Gradio UI with Gemini integration
+│
+├── config/
+│   ├── prometheus.yml                 # Prometheus configuration
+│   └── grafana/
+│       └── dashboards/
+│           └── traffic_dashboard.json # Grafana dashboard JSON
+│
+├── requirements.txt                   # Python dependencies
+├── docker-compose.yml                 # Docker setup (optional)
+├── .env                               # Environment variables (API keys)
+└── README.md                          # Project documentation
+
