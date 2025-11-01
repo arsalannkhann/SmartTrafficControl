@@ -1,6 +1,4 @@
-
-# Generate README.md content
-readme_content = """# 🚦 Smart Traffic Control System
+#🚦 Smart Traffic Control System
 
 A comprehensive, data-driven traffic management system that uses **PySpark ETL pipelines**, **Grafana dashboards**, and **Google Gemini AI** to optimize traffic light timings and reduce congestion.
 
@@ -440,8 +438,3 @@ Notes:
 
 
 **Built with ❤️ for Smart City Solutions**
-"""
-
-print("README.md")
-print("=" * 60)
-print(readme_content)
