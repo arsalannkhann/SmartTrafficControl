@@ -1,4 +1,4 @@
-##🚦 Smart Traffic Control System
+🚦 Smart Traffic Control System
 
 A comprehensive, data-driven traffic management system that uses **PySpark ETL pipelines**, **Grafana dashboards**, and **Google Gemini AI** to optimize traffic light timings and reduce congestion.
 
