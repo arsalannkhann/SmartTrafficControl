@@ -18,6 +18,7 @@ class TrafficMetricsExporter:
         self.data_path = data_path
         self.port = port
         self.registry = CollectorRegistry()
+        self.current_hour = 0  # Track which hour of data to display
         self._setup_metrics()
 
     def _setup_metrics(self):
@@ -67,18 +68,30 @@ class TrafficMetricsExporter:
     def update_metrics(self):
         """Update Prometheus metrics from processed data"""
         try:
-            stats_df = self._read_latest_csv("intersection_stats_csv/*.csv")
+            # Read hourly metrics for time-series data
+            hourly_df = self._read_latest_csv("hourly_metrics_csv/*.csv")
 
-            if stats_df is None:
+            if hourly_df is None:
                 print("No data files found. Waiting for ETL pipeline to generate data...")
                 return
 
-            for _, row in stats_df.iterrows():
+            # Filter data for current hour
+            hour_data = hourly_df[hourly_df["hour"] == self.current_hour]
+            
+            if hour_data.empty:
+                # Reset to hour 0 if we've gone past available data
+                self.current_hour = 0
+                hour_data = hourly_df[hourly_df["hour"] == self.current_hour]
+
+            for _, row in hour_data.iterrows():
                 intersection_id = row["intersection_id"]
                 location = row["location"]
 
+                # Use total_vehicles divided by reading_count for average
+                avg_vehicles = row.get("total_vehicles", 0) / max(row.get("reading_count", 1), 1)
+                
                 self.vehicle_count_gauge.labels(intersection_id=intersection_id, location=location).set(
-                    row.get("avg_vehicle_count", 0)
+                    avg_vehicles
                 )
 
                 self.avg_speed_gauge.labels(intersection_id=intersection_id, location=location).set(
@@ -89,7 +102,10 @@ class TrafficMetricsExporter:
                     row.get("avg_congestion_index", 0)
                 )
 
-            print(f"Metrics updated at {time.strftime('%Y-%m-%d %H:%M:%S')}")
+            print(f"Metrics updated for hour {self.current_hour} at {time.strftime('%Y-%m-%d %H:%M:%S')}")
+            
+            # Advance to next hour for next update
+            self.current_hour = (self.current_hour + 1) % 24
 
         except Exception as e:
             print(f"Error updating metrics: {e}")

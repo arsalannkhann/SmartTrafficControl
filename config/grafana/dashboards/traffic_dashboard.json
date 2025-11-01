@@ -8,11 +8,40 @@
   "links": [],
   "panels": [
     {
-      "datasource": "Prometheus",
-      "fieldConfig": {"defaults": {}, "overrides": []},
-      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 0},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never",
+            "axisLabel": "Congestion Index",
+            "axisPlacement": "auto"
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 10, "w": 24, "x": 0, "y": 0},
       "id": 1,
-      "options": {},
+      "options": {
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        },
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "calcs": ["lastNotNull", "mean", "max"],
+          "width": 200
+        }
+      },
       "targets": [
         {"expr": "avg by (intersection_id) (traffic_congestion_index{intersection_id=~\"$intersection_id\"})", "legendFormat": "{{intersection_id}}", "refId": "A"}
       ],
@@ -20,11 +49,39 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
-      "fieldConfig": {"defaults": {}, "overrides": []},
-      "gridPos": {"h": 6, "w": 12, "x": 0, "y": 8},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "auto",
+            "axisLabel": "Vehicles",
+            "axisPlacement": "auto"
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 10},
       "id": 2,
-      "options": {},
+      "options": {
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        },
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": ["lastNotNull"]
+        }
+      },
       "targets": [
         {"expr": "traffic_vehicle_count{intersection_id=~\"$intersection_id\"}", "legendFormat": "{{intersection_id}}", "refId": "A"}
       ],
@@ -32,11 +89,39 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
-      "fieldConfig": {"defaults": {}, "overrides": []},
-      "gridPos": {"h": 6, "w": 12, "x": 12, "y": 8},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "auto",
+            "axisLabel": "Speed (mph)",
+            "axisPlacement": "auto"
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 10},
       "id": 3,
-      "options": {},
+      "options": {
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        },
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": ["lastNotNull"]
+        }
+      },
       "targets": [
         {"expr": "traffic_average_speed{intersection_id=~\"$intersection_id\"}", "legendFormat": "{{intersection_id}}", "refId": "A"}
       ],
@@ -51,23 +136,28 @@
     "list": [
       {
         "current": {},
-        "datasource": "Prometheus",
+        "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
         "definition": "label_values(traffic_vehicle_count, intersection_id)",
         "hide": 0,
         "includeAll": true,
         "label": "Intersection",
-        "multi": false,
+        "multi": true,
         "name": "intersection_id",
         "options": [],
         "query": "label_values(traffic_vehicle_count, intersection_id)",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
-        "type": "query"
+        "type": "query",
+        "allValue": ".*"
       }
     ]
   },
-  "time": {"from": "now-24h", "to": "now"},
+  "time": {"from": "now-15m", "to": "now"},
+  "refresh": "30s",
   "timezone": "browser",
   "title": "Traffic Dashboard",
   "uid": "traffic-dashboard",
